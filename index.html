@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caminos Nuevos - Sistema Infalible</title>
+    <style>
+        :root { --primary: #2c3e50; --success: #27ae60; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; justify-content: center; padding: 20px; }
+        .card { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; }
+        input, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-size: 16px; }
+        button { background: var(--success); color: white; border: none; font-weight: bold; cursor: pointer; }
+        button:active { transform: scale(0.98); }
+        video { width: 100%; border-radius: 10px; background: #000; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Registro de Paciente</h2>
+    <input type="text" id="nombreP" placeholder="Nombre completo">
+    
+    <video id="video" autoplay playsinline></video>
+    
+    <!-- Quitamos el 'onclick' del HTML y lo manejaremos en el Script -->
+    <button id="btnCapturar" style="background: #2980b9;">📸 Tomar Foto</button>
+    <button id="btnGuardar">🚀 Guardar Todo en la Nube</button>
+    
+    <canvas id="canvas" style="display:none;"></canvas>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://gstatic.com";
+    import { getFirestore, collection, addDoc, doc, setDoc } from "https://gstatic.com";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyC78y2K4T9rMFMVsG_UQxTmPANzV7Yapf8",
+        authDomain: "://firebaseapp.com",
+        projectId: "caminosnuevosdatabase",
+        storageBucket: "caminosnuevosdatabase.firebasestorage.app",
+        messagingSenderId: "907500835423",
+        appId: "1:907500835423:web:f50b459a84f5d7d92a81ea"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    let fotoBase64 = null;
+
+    // 1. Iniciar Cámara
+    const video = document.getElementById('video');
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(s => video.srcObject = s)
+        .catch(err => alert("Revisa el permiso de la cámara"));
+
+    // 2. Lógica del Botón Capturar (Conectado directamente)
+    document.getElementById('btnCapturar').addEventListener('click', () => {
+        const canvas = document.getElementById('canvas');
+        canvas.width = video.videoWidth; 
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        
+        fotoBase64 = canvas.toDataURL('image/jpeg', 0.5); 
+        alert("✅ Foto capturada correctamente");
+    });
+
+    // 3. Lógica del Botón Guardar (Conectado directamente)
+    document.getElementById('btnGuardar').addEventListener('click', async () => {
+        const nombre = document.getElementById('nombreP').value;
+        if(!nombre) return alert("Escribe el nombre");
+        if(!fotoBase64) return alert("Toma la foto primero");
+
+        try {
+            // Guardar en la nube (GRATIS)
+            const docRef = await addDoc(collection(db, "pacientes"), {
+                nombre: nombre,
+                foto: fotoBase64,
+                fecha: new Date().toLocaleString()
+            });
+
+            // Crear las 3 carpetas automáticas
+            const carpetas = ["Clinica", "Terapeutica", "Psicologica"];
+            for (let c of carpetas) {
+                await setDoc(doc(db, `pacientes/${docRef.id}/carpetas`, c), {
+                    creado: new Date().toISOString()
+                });
+            }
+
+            alert("🚀 ¡SISTEMA EXITOSO! Datos guardados.");
+            location.reload(); 
+        } catch (e) {
+            alert("Error: " + e.message);
+        }
+    });
+</script>
+</body>
+</html>
