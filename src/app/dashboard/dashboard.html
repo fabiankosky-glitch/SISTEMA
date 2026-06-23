@@ -1,16 +1,19 @@
-<div class="dashboard-container">
-  <div class="sidebar">
-    <h2>Menú</h2>
-    <nav>
-      <ul>
-        <li><a routerLink="/dashboard/contabilidad" routerLinkActive="active">Contabilidad</a></li>
-        <li><a routerLink="/dashboard/recursos-humanos" routerLinkActive="active">Recursos Humanos</a></li>
-        <li><a routerLink="/dashboard/inventario" routerLinkActive="active">Inventario</a></li>
-        <li><a routerLink="/dashboard/reportes" routerLinkActive="active">Reportes</a></li>
-      </ul>
+<div class="dashboard-layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h3>SisGestión</h3>
+    </div>
+    <nav class="sidebar-nav">
+      <a routerLink="/dashboard/contabilidad" routerLinkActive="active">Contabilidad</a>
+      <a routerLink="/dashboard/inventario" routerLinkActive="active">Inventario</a>
+      <a routerLink="/dashboard/reportes" routerLinkActive="active">Reportes</a>
+      <a routerLink="/dashboard/recursos" routerLinkActive="active">Recursos</a>
     </nav>
-  </div>
-  <div class="content">
+    <div class="sidebar-footer">
+      <button (click)="logout()">Cerrar Sesión</button>
+    </div>
+  </aside>
+  <main class="main-content">
     <router-outlet></router-outlet>
-  </div>
+  </main>
 </div>

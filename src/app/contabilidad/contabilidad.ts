@@ -1,9 +1,8 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'app-contabilidad',
-  imports: [],
-  templateUrl: './contabilidad.html',
-  styleUrl: './contabilidad.css',
+  template: `<h2>Sección de Contabilidad</h2>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Contabilidad {}
+export class ContabilidadComponent { }

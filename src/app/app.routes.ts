@@ -1,22 +1,29 @@
 import { Routes } from '@angular/router';
+import { redirectLoggedInTo, canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
+
 import { LoginComponent } from './login/login';
 import { DashboardComponent } from './dashboard/dashboard';
-import { ContabilidadComponent } from './contabilidad/contabilidad';
-import { RecursosHumanosComponent } from './recursos-humanos/recursos-humanos';
-import { InventarioComponent } from './inventario/inventario';
-import { ReportesComponent } from './reportes/reportes';
+
+const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
+const redirectLoggedInToDashboard = () => redirectLoggedInTo(['dashboard']);
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent },
+  {
+    path: 'login',
+    component: LoginComponent,
+    ...canActivate(redirectLoggedInToDashboard),
+  },
   {
     path: 'dashboard',
     component: DashboardComponent,
+    ...canActivate(redirectUnauthorizedToLogin),
     children: [
-      { path: 'contabilidad', component: ContabilidadComponent },
-      { path: 'recursos-humanos', component: RecursosHumanosComponent },
-      { path: 'inventario', component: InventarioComponent },
-      { path: 'reportes', component: ReportesComponent },
-    ],
+      { path: '', redirectTo: 'contabilidad', pathMatch: 'full' },
+      { path: 'contabilidad', loadComponent: () => import('./contabilidad/contabilidad').then(m => m.ContabilidadComponent) },
+      { path: 'inventario', loadComponent: () => import('./inventario/inventario').then(m => m.InventarioComponent) },
+      { path: 'reportes', loadComponent: () => import('./reportes/reportes').then(m => m.ReportesComponent) },
+      { path: 'recursos', loadComponent: () => import('./recursos/recursos').then(m => m.RecursosComponent) },
+    ]
   },
 ];

@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'app-inventario',
-  template: `<h2>Sección de Inventario</h2>`,
+  selector: 'app-recursos',
+  template: `<h2>Sección de Recursos Humanos</h2>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InventarioComponent { }
+export class RecursosComponent { }
