@@ -1,4 +1,5 @@
-import { ApplicationConfig, provideNoopZoneChangeDetection } from '@angular/core';
+
+import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
@@ -8,8 +9,8 @@ import { firebaseConfig } from '../environments/firebase.config';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideNoopZoneChangeDetection(),
     provideRouter(routes),
+    // The correct way to provide Firebase for standalone apps
     provideFirebaseApp(() => initializeApp(firebaseConfig)),
     provideAuth(() => getAuth()),
   ],

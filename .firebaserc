@@ -1,5 +1,7 @@
 {
   "projects": {
     "default": "sisgestionintegrl"
-  }
+  },
+  "targets": {},
+  "etags": {}
 }
