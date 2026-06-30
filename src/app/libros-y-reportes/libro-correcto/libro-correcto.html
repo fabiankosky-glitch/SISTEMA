@@ -1,10 +1,10 @@
 <div class="form-container">
   <form class="medicamento-form">
-    <h2>Registro y Control de Tratamiento</h2>
+    <h2>Registro y Control de Entrada y Salida de Medicamentos</h2>
 
-    <!-- PRIMERA PARTE: Plan de Tratamiento -->
+    <!-- PRIMERA PARTE: Plan de Tratamiento e Información del Paciente -->
     <div class="section">
-      <h3>1. Plan de Tratamiento</h3>
+      <h3>1. Información del Paciente y Plan de Tratamiento</h3>
       <div class="form-grid">
 
         <div class="form-group">
@@ -13,13 +13,23 @@
         </div>
 
         <div class="form-group">
-          <label for="medicamentoCorrecto">Medicamento Correcto</label>
+          <label for="folio">Folio / Documento</label>
+          <input type="text" id="folio" [value]="folio()" (input)="folio.set($any($event.target).value)" placeholder="Ej: 14.260.290">
+        </div>
+
+        <div class="form-group">
+          <label for="medicamentoCorrecto">Nombre del Producto</label>
           <input type="text" id="medicamentoCorrecto" [value]="medicamentoCorrecto()" (input)="medicamentoCorrecto.set($any($event.target).value)">
         </div>
 
         <div class="form-group">
-          <label for="cantidadCorrecta">Cantidad Correcta (Total Unidades)</label>
-          <input type="number" id="cantidadCorrecta" placeholder="Ej: 100" [value]="cantidadCorrecta() || ''" (input)="cantidadCorrecta.set($any($event.target).valueAsNumber)">
+          <label for="presentacion">Unidad, Presentación, Concentración</label>
+          <input type="text" id="presentacion" [value]="presentacion()" (input)="presentacion.set($any($event.target).value)" placeholder="Ej: 30-tab-2mg">
+        </div>
+
+        <div class="form-group">
+          <label for="cantidadCorrecta">Cantidad de Entrada (Total Unidades)</label>
+          <input type="number" id="cantidadCorrecta" placeholder="Ej: 30" [value]="cantidadCorrecta() || ''" (input)="cantidadCorrecta.set($any($event.target).valueAsNumber)">
         </div>
 
         <div class="form-group">
@@ -29,7 +39,7 @@
 
         <div class="form-group">
           <label for="dosisPm1">Dosis PM1 (2 PM)</label>
-          <input type="number" id="dosisPm1" placeholder="Ej: 0.5" [value]="dosisPm1() || ''" (input)="dosisPm1.set($any($event.target).valueAsNumber)">
+          <input type="number" id="dosisPm1" placeholder="Ej: 1" [value]="dosisPm1() || ''" (input)="dosisPm1.set($any($event.target).valueAsNumber)">
         </div>
 
         <div class="form-group">
@@ -38,8 +48,8 @@
         </div>
 
         <div class="form-group readonly">
-          <label for="dosisTotalDia">Dosis Total Día (Calculada)</label>
-          <input type="text" id="dosisTotalDia" [value]="dosisTotalDia() || ''" readonly>
+          <label>Dosis Total Día (Calculada)</label>
+          <input type="text" [value]="dosisTotalDia() || ''" readonly>
         </div>
 
         <div class="form-group">
@@ -53,32 +63,17 @@
         </div>
 
         <div class="form-group readonly">
-          <label for="fechaFinal">Fecha Final (Calculada)</label>
-          <input type="date" id="fechaFinal" [value]="fechaFinal() || ''" readonly>
+          <label>Fecha Final (Estimada)</label>
+          <input type="date" [value]="fechaFinal() || ''" readonly>
         </div>
       </div>
     </div>
 
-    <!-- SEGUNDA PARTE: Kardex del Medicamento -->
+    <!-- SEGUNDA PARTE: Detalles Técnicos del Kardex -->
     <div class="section">
-      <h3>2. Kardex de Inventario</h3>
+      <h3>2. Especificaciones Técnicas (Kardex)</h3>
       <div class="form-grid">
-
-        <div class="form-group readonly">
-          <label for="fechaKardex">Fecha</label>
-          <input type="date" id="fechaKardex" [value]="fechaInicio()" readonly>
-        </div>
-
-        <div class="form-group readonly">
-          <label for="nombreProductoKardex">Nombre del Producto</label>
-          <input type="text" id="nombreProductoKardex" [value]="medicamentoCorrecto()" readonly>
-        </div>
         
-        <div class="form-group">
-          <label for="presentacion">Unidad, Presentación, Concentración</label>
-          <input type="text" id="presentacion" [value]="presentacion()" (input)="presentacion.set($any($event.target).value)">
-        </div>
-
         <div class="form-group">
           <label for="componenteActivo">Componente Activo</label>
           <input type="text" id="componenteActivo" [value]="componenteActivo()" (input)="componenteActivo.set($any($event.target).value)">
@@ -100,45 +95,71 @@
         </div>
         
         <div class="form-group">
-          <label for="casaMatriz">Casa Matriz</label>
+          <label for="casaMatriz">Casa Matriz o Fabricante</label>
           <input type="text" id="casaMatriz" [value]="casaMatriz()" (input)="casaMatriz.set($any($event.target).value)">
         </div>
 
-        <div class="form-group readonly">
+        <div class="form-group">
           <label for="proveedor">Proveedor</label>
-          <input type="text" id="proveedor" [value]="proveedor()" readonly>
-        </div>
-
-        <div class="form-group readonly">
-          <label for="entrada">Entrada</label>
-          <input type="number" id="entrada" [value]="cantidadCorrecta() || ''" readonly>
+          <input type="text" id="proveedor" [value]="proveedor()" (input)="proveedor.set($any($event.target).value)">
         </div>
 
         <div class="form-group">
-          <label for="presentacionEmpaque">Presentación, Empaque, Etiqueta</label>
-          <input type="text" id="presentacionEmpaque" [value]="presentacionEmpaque()" (input)="presentacionEmpaque.set($any($event.target).value)">
+          <label for="presentacionEmpaque">Empaque en buen estado</label>
+          <select id="presentacionEmpaque" [value]="presentacionEmpaque()" (change)="presentacionEmpaque.set($any($event.target).value)">
+            <option value="SI">SI</option>
+            <option value="NO">NO</option>
+          </select>
         </div>
 
-        <div class="form-group readonly">
-          <label for="salida">Salida (Dosis Día)</label>
-          <input type="number" id="salida" [value]="dosisTotalDia() || ''" readonly>
-        </div>
-
-        <div class="form-group readonly">
-          <label for="saldo">Saldo (Calculado)</label>
-          <input type="number" id="saldo" [value]="saldo() || ''" readonly>
-        </div>
-        
         <div class="form-group">
-          <label for="firma">Firma del Paciente</label>
+          <label for="firma">Nombre de quien Elabora</label>
           <input type="text" id="firma" [value]="firma()" (input)="firma.set($any($event.target).value)">
         </div>
 
       </div>
     </div>
 
+    <!-- VISTA PREVIA DEL KARDEX GENERADO -->
+    @if (rows().length > 0) {
+      <div class="section table-preview">
+        <h3>3. Vista Previa del Registro de Control (Hasta saldo 0)</h3>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Producto</th>
+                <th>Invima</th>
+                <th>Lote</th>
+                <th>Entradas</th>
+                <th>Salidas</th>
+                <th>Saldo</th>
+                <th>Firma</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of rows(); track $index) {
+                <tr>
+                  <td>{{row.fecha}}</td>
+                  <td>{{row.producto}}</td>
+                  <td>{{row.invima}}</td>
+                  <td>{{row.lote}}</td>
+                  <td>{{row.entrada || ''}}</td>
+                  <td>{{row.salida || ''}}</td>
+                  <td>{{row.saldo}}</td>
+                  <td class="firma-col"></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+
     <div class="form-actions">
       <button type="button" class="submit-btn" (click)="guardarRegistro()">Guardar Registro</button>
+      <button type="button" class="submit-btn pdf-btn" (click)="generarPDF()">Generar PDF (Formato Oficial)</button>
     </div>
   </form>
 </div>

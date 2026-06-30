@@ -29,7 +29,7 @@ export const routes: Routes = [
         loadComponent: () => import('./reportes/reportes').then(m => m.ReportesComponent),
         children: [
           { path: '', redirectTo: 'libro-correcto', pathMatch: 'full'},
-          { path: 'libro-correcto', loadComponent: () => import('./libros-y-reportes/libro-correcto/libro-correcto').then(m => m.LibroCorrectoComponent) },
+          { path: 'libro-correcto', loadComponent: () => import('./libros-y-reportes/libro-correcto/libro-correcto.component').then(m => m.LibroCorrectoComponent) },
         ]
       },
       { path: 'recursos', loadComponent: () => import('./recursos/recursos').then(m => m.RecursosComponent) },
