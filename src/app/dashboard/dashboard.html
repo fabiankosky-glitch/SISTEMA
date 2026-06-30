@@ -4,25 +4,14 @@
       <h3>SisGestión</h3>
     </div>
     <nav class="sidebar-nav">
-      <a routerLink="/dashboard/contabilidad" routerLinkActive="active">Contabilidad</a>
-      <a routerLink="/dashboard/inventario" routerLinkActive="active">Inventario</a>
-      <div class="submenu-container">
-        <a (click)="toggleLibrosSubmenu()" [class.active]="librosSubmenuOpen()">Libros y Reportes</a>
-        @if (librosSubmenuOpen()) {
-          <div class="submenu">
-            <a routerLink="/dashboard/libros-y-reportes/libro-de-turno" routerLinkActive="active">Libro de Turno</a>
-            <a routerLink="/dashboard/libros-y-reportes/libro-correcto" routerLinkActive="active">Libro Correcto</a>
-            <a routerLink="/dashboard/libros-y-reportes/minuta-de-enfermeria" routerLinkActive="active">Minuta de Enfermería</a>
-            <a routerLink="/dashboard/libros-y-reportes/libro-de-ingresos" routerLinkActive="active">Libro de Ingresos</a>
-            <a routerLink="/dashboard/libros-y-reportes/reportes" routerLinkActive="active">Reportes</a>
-          </div>
-        }
-      </div>
-      <a routerLink="/dashboard/recursos" routerLinkActive="active">Recursos</a>
+      <a routerLink="contabilidad" routerLinkActive="active">Contabilidad</a>
+      <a routerLink="inventario" routerLinkActive="active">Inventario</a>
+      <a routerLink="libros-y-reportes" routerLinkActive="active">Libros y Reportes</a>
+      <a routerLink="recursos" routerLinkActive="active">Recursos</a>
     </nav>
-    <div class="sidebar-footer">
+    <footer class="sidebar-footer">
       <button (click)="logout()">Cerrar Sesión</button>
-    </div>
+    </footer>
   </aside>
   <main class="main-content">
     <router-outlet></router-outlet>
