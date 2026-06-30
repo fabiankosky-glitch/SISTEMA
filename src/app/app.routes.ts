@@ -1,6 +1,6 @@
-import { Routes } from '@angular/router';
-import { redirectLoggedInTo, canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 
+import { Routes } from '@angular/router';
+import { AuthGuard, redirectLoggedInTo, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { LoginComponent } from './login/login';
 import { DashboardComponent } from './dashboard/dashboard';
 
@@ -12,18 +12,20 @@ export const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
-    ...canActivate(redirectLoggedInToDashboard),
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectLoggedInToDashboard }
   },
   {
     path: 'dashboard',
     component: DashboardComponent,
-    ...canActivate(redirectUnauthorizedToLogin),
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLogin },
     children: [
       { path: '', redirectTo: 'contabilidad', pathMatch: 'full' },
       { path: 'contabilidad', loadComponent: () => import('./contabilidad/contabilidad').then(m => m.ContabilidadComponent) },
       { path: 'inventario', loadComponent: () => import('./inventario/inventario').then(m => m.InventarioComponent) },
       { path: 'reportes', loadComponent: () => import('./reportes/reportes').then(m => m.ReportesComponent) },
-      { path: 'recursos', loadComponent: () => import('./recursos/recursos').then(m => m.RecursosComponent) },
+      { path: 'recursos-humanos', loadComponent: () => import('./recursos-humanos/recursos-humanos').then(m => m.RecursosHumanosComponent) },
     ]
   },
 ];

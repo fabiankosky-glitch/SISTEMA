@@ -3,6 +3,7 @@ import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
+import { AuthGuard } from '@angular/fire/auth-guard';
 
 import { routes } from './app.routes';
 import { firebaseConfig } from '../environments/firebase.config';
@@ -10,8 +11,8 @@ import { firebaseConfig } from '../environments/firebase.config';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    // The correct way to provide Firebase for standalone apps
     provideFirebaseApp(() => initializeApp(firebaseConfig)),
     provideAuth(() => getAuth()),
+    AuthGuard,
   ],
 };
