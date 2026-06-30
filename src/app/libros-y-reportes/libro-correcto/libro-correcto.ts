@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'app-libro-correcto',
-  imports: [],
   templateUrl: './libro-correcto.html',
-  styleUrl: './libro-correcto.css',
+  styleUrls: ['./libro-correcto.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LibroCorrecto {}
+export class LibroCorrectoComponent {
+
+}

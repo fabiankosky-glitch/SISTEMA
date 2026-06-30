@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-reportes',
-  template: `<h2>Sección de Reportes</h2>`,
+  templateUrl: './reportes.html',
+  imports: [RouterModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportesComponent { }

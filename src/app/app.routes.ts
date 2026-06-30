@@ -24,7 +24,14 @@ export const routes: Routes = [
       { path: '', redirectTo: 'contabilidad', pathMatch: 'full' },
       { path: 'contabilidad', loadComponent: () => import('./contabilidad/contabilidad').then(m => m.ContabilidadComponent) },
       { path: 'inventario', loadComponent: () => import('./inventario/inventario').then(m => m.InventarioComponent) },
-      { path: 'libros-y-reportes', loadComponent: () => import('./reportes/reportes').then(m => m.ReportesComponent) },
+      {
+        path: 'libros-y-reportes',
+        loadComponent: () => import('./reportes/reportes').then(m => m.ReportesComponent),
+        children: [
+          { path: '', redirectTo: 'libro-correcto', pathMatch: 'full'},
+          { path: 'libro-correcto', loadComponent: () => import('./libros-y-reportes/libro-correcto/libro-correcto').then(m => m.LibroCorrectoComponent) },
+        ]
+      },
       { path: 'recursos', loadComponent: () => import('./recursos/recursos').then(m => m.RecursosComponent) },
     ]
   },

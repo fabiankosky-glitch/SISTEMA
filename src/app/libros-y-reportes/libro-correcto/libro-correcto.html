@@ -1,1 +1,144 @@
-<p>libro-correcto works!</p>
+<div class="form-container">
+  <form class="medicamento-form">
+    <h2>Registro y Control de Tratamiento</h2>
+
+    <!-- PRIMERA PARTE: Plan de Tratamiento -->
+    <div class="section">
+      <h3>1. Plan de Tratamiento</h3>
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label for="pacienteCorrecto">Nombre del Paciente</label>
+          <input type="text" id="pacienteCorrecto" [value]="pacienteCorrecto()" (input)="pacienteCorrecto.set($any($event.target).value)">
+        </div>
+
+        <div class="form-group">
+          <label for="medicamentoCorrecto">Medicamento Correcto</label>
+          <input type="text" id="medicamentoCorrecto" [value]="medicamentoCorrecto()" (input)="medicamentoCorrecto.set($any($event.target).value)">
+        </div>
+
+        <div class="form-group">
+          <label for="cantidadCorrecta">Cantidad Correcta (Total Unidades)</label>
+          <input type="number" id="cantidadCorrecta" placeholder="Ej: 100" [value]="cantidadCorrecta() || ''" (input)="cantidadCorrecta.set($any($event.target).valueAsNumber)">
+        </div>
+
+        <div class="form-group">
+          <label for="dosisAm">Dosis AM (8 AM)</label>
+          <input type="number" id="dosisAm" placeholder="Ej: 1" [value]="dosisAm() || ''" (input)="dosisAm.set($any($event.target).valueAsNumber)">
+        </div>
+
+        <div class="form-group">
+          <label for="dosisPm1">Dosis PM1 (2 PM)</label>
+          <input type="number" id="dosisPm1" placeholder="Ej: 0.5" [value]="dosisPm1() || ''" (input)="dosisPm1.set($any($event.target).valueAsNumber)">
+        </div>
+
+        <div class="form-group">
+          <label for="dosisPm2">Dosis PM2 (8 PM)</label>
+          <input type="number" id="dosisPm2" placeholder="Ej: 1" [value]="dosisPm2() || ''" (input)="dosisPm2.set($any($event.target).valueAsNumber)">
+        </div>
+
+        <div class="form-group readonly">
+          <label for="dosisTotalDia">Dosis Total Día (Calculada)</label>
+          <input type="text" id="dosisTotalDia" [value]="dosisTotalDia() || ''" readonly>
+        </div>
+
+        <div class="form-group">
+          <label for="viaCorrecta">Vía Correcta</label>
+          <input type="text" id="viaCorrecta" [value]="viaCorrecta()" (input)="viaCorrecta.set($any($event.target).value)">
+        </div>
+
+        <div class="form-group">
+          <label for="fechaInicio">Fecha Inicio Tratamiento</label>
+          <input type="date" id="fechaInicio" [value]="fechaInicio()" (input)="fechaInicio.set($any($event.target).value)">
+        </div>
+
+        <div class="form-group readonly">
+          <label for="fechaFinal">Fecha Final (Calculada)</label>
+          <input type="date" id="fechaFinal" [value]="fechaFinal() || ''" readonly>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEGUNDA PARTE: Kardex del Medicamento -->
+    <div class="section">
+      <h3>2. Kardex de Inventario</h3>
+      <div class="form-grid">
+
+        <div class="form-group readonly">
+          <label for="fechaKardex">Fecha</label>
+          <input type="date" id="fechaKardex" [value]="fechaInicio()" readonly>
+        </div>
+
+        <div class="form-group readonly">
+          <label for="nombreProductoKardex">Nombre del Producto</label>
+          <input type="text" id="nombreProductoKardex" [value]="medicamentoCorrecto()" readonly>
+        </div>
+        
+        <div class="form-group">
+          <label for="presentacion">Unidad, Presentación, Concentración</label>
+          <input type="text" id="presentacion" [value]="presentacion()" (input)="presentacion.set($any($event.target).value)">
+        </div>
+
+        <div class="form-group">
+          <label for="componenteActivo">Componente Activo</label>
+          <input type="text" id="componenteActivo" [value]="componenteActivo()" (input)="componenteActivo.set($any($event.target).value)">
+        </div>
+
+        <div class="form-group">
+          <label for="registroInvima">Registro Invima</label>
+          <input type="text" id="registroInvima" [value]="registroInvima()" (input)="registroInvima.set($any($event.target).value)">
+        </div>
+
+        <div class="form-group">
+          <label for="lote">Número de Lote</label>
+          <input type="text" id="lote" [value]="lote()" (input)="lote.set($any($event.target).value)">
+        </div>
+
+        <div class="form-group">
+          <label for="fechaVencimiento">Fecha de Vencimiento</label>
+          <input type="date" id="fechaVencimiento" [value]="fechaVencimiento()" (input)="fechaVencimiento.set($any($event.target).value)">
+        </div>
+        
+        <div class="form-group">
+          <label for="casaMatriz">Casa Matriz</label>
+          <input type="text" id="casaMatriz" [value]="casaMatriz()" (input)="casaMatriz.set($any($event.target).value)">
+        </div>
+
+        <div class="form-group readonly">
+          <label for="proveedor">Proveedor</label>
+          <input type="text" id="proveedor" [value]="proveedor()" readonly>
+        </div>
+
+        <div class="form-group readonly">
+          <label for="entrada">Entrada</label>
+          <input type="number" id="entrada" [value]="cantidadCorrecta() || ''" readonly>
+        </div>
+
+        <div class="form-group">
+          <label for="presentacionEmpaque">Presentación, Empaque, Etiqueta</label>
+          <input type="text" id="presentacionEmpaque" [value]="presentacionEmpaque()" (input)="presentacionEmpaque.set($any($event.target).value)">
+        </div>
+
+        <div class="form-group readonly">
+          <label for="salida">Salida (Dosis Día)</label>
+          <input type="number" id="salida" [value]="dosisTotalDia() || ''" readonly>
+        </div>
+
+        <div class="form-group readonly">
+          <label for="saldo">Saldo (Calculado)</label>
+          <input type="number" id="saldo" [value]="saldo() || ''" readonly>
+        </div>
+        
+        <div class="form-group">
+          <label for="firma">Firma del Paciente</label>
+          <input type="text" id="firma" [value]="firma()" (input)="firma.set($any($event.target).value)">
+        </div>
+
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="submit-btn" (click)="guardarRegistro()">Guardar Registro</button>
+    </div>
+  </form>
+</div>
