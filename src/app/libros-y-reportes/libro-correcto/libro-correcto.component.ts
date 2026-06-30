@@ -65,7 +65,7 @@ export class LibroCorrectoComponent {
     const inicioStr = this.fechaInicio();
     const cantidadInicial = this.cantidadCorrecta() || 0;
     const dosisDiaria = this.dosisTotalDia() || 0;
-    
+
     if (!inicioStr || !cantidadInicial || !dosisDiaria) return rows;
 
     const medicamento = this.medicamentoCorrecto();
@@ -78,16 +78,12 @@ export class LibroCorrectoComponent {
     const prov = this.proveedor();
     const empaque = this.presentacionEmpaque() || 'SI';
 
-    let saldoActual = cantidadInicial;
+    let saldoDelDiaAnterior = cantidadInicial;
     const fechaActual = new Date(inicioStr + 'T00:00:00');
-    let isFirstRow = true;
 
-    while (saldoActual > 0) {
-      const consumo = Math.min(saldoActual, dosisDiaria);
-      const entradaEnEstaFila = isFirstRow ? cantidadInicial : (saldoActual);
-      
-      const prevSaldo = saldoActual;
-      saldoActual -= consumo;
+    while (saldoDelDiaAnterior > 0) {
+      const consumo = Math.min(saldoDelDiaAnterior, dosisDiaria);
+      const saldoActual = saldoDelDiaAnterior - consumo;
 
       rows.push({
         fecha: fechaActual.toISOString().split('T')[0],
@@ -99,15 +95,17 @@ export class LibroCorrectoComponent {
         vencimiento: vcto,
         casa: casa,
         proveedor: prov,
-        entrada: entradaEnEstaFila.toString(),
+        entrada: saldoDelDiaAnterior.toString(),
         empaque: empaque,
         salida: consumo.toString(),
         saldo: saldoActual.toString(),
         firma: ''
       });
 
-      isFirstRow = false;
-      fechaActual.setDate(fechaActual.getDate() + 1);
+      saldoDelDiaAnterior = saldoActual;
+      if (saldoDelDiaAnterior > 0) {
+        fechaActual.setDate(fechaActual.getDate() + 1);
+      }
     }
     return rows;
   });
@@ -117,7 +115,7 @@ export class LibroCorrectoComponent {
   }
 
   generarPDF() {
-    const doc = new jsPDF('l', 'mm', 'letter');
+    const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'letter' });
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     
@@ -146,16 +144,45 @@ export class LibroCorrectoComponent {
         return;
     }
 
+    const drawFooter = (data: any) => {
+        const pageNumber = data.pageNumber;
+        const totalPages = (doc as any).internal.getNumberOfPages();
+        const y = pageHeight - 25; // Position for the signature block
+        const boxW = (pageWidth - 20) / 3;
+        
+        doc.setDrawColor(0);
+        doc.setLineWidth(0.1);
+
+        // Signature Boxes
+        doc.rect(10, y, boxW, 15);
+        doc.setFontSize(8);
+        doc.text('ELABORO:', 12, y + 4);
+        doc.text('ENCARGADO ENFERMERIA', 12, y + 12);
+        
+        doc.rect(10 + boxW, y, boxW, 15);
+        doc.text('REVISO: JHON SALAZAR', 12 + boxW, y + 4);
+        doc.text('CARGO: DIRECTOR OPERATIVO', 12 + boxW, y + 12);
+        
+        doc.rect(10 + (boxW * 2), y, boxW, 15);
+        doc.text('APROBO:', 12 + (boxW * 2), y + 4);
+        doc.text('CARGO:', 12 + (boxW * 2), y + 12);
+
+        // Page Numbering
+        doc.setFontSize(8);
+        doc.text(`Página ${pageNumber} de ${totalPages}`, pageWidth / 2, pageHeight - 5, { align: 'center' });
+    };
+
+
     (doc as any).autoTable({
         startY: 35,
         head: [['Fecha', 'Nombre del Producto', 'Unidad, Presentación, Concentración', 'Componente Activo', 'Registro Invima', 'No. de Lote', 'Fecha de Vencimiento', 'Casa Matriz o Fabricante', 'Proveedor', 'Entradas', 'Empaque/Etiquetas (SI/NO)', 'Salidas', 'Saldo', 'firma']],
         body: dataRows,
         theme: 'grid',
-        styles: { fontSize: 8, cellPadding: 1.5, halign: 'center', valign: 'middle', textColor: 0 },
-        headStyles: { fillColor: [255, 255, 255], textColor: 0, lineWidth: 0.1, fontStyle: 'bold', fontSize: 8 },
-        margin: { top: 35, bottom: 25, left: 10, right: 10 },
+        styles: { fontSize: 9, cellPadding: 1, halign: 'center', valign: 'middle', textColor: 0 },
+        headStyles: { fillColor: [255, 255, 255], textColor: 0, lineWidth: 0.1, fontStyle: 'bold', fontSize: 7 },
+        margin: { top: 35, bottom: 30, left: 10, right: 10 },
         didDrawPage: (data: any) => {
-            // Header box
+            // Header
             doc.setDrawColor(0);
             doc.setLineWidth(0.1);
             doc.rect(10, 10, pageWidth - 20, 25);
@@ -174,45 +201,10 @@ export class LibroCorrectoComponent {
             doc.text('Código:   RA-22', pageWidth - 12, 15, { align: 'right' });
             doc.text('Versión:   1', pageWidth - 12, 22, { align: 'right' });
 
-            // Page Numbering
-            const str = "Página " + doc.internal.getNumberOfPages();
-            doc.setFontSize(8);
-            doc.text(str, pageWidth - 12, 30, { align: 'right' });
+            // Footer with signatures
+            drawFooter(data);
         }
     });
-
-    const totalPages = doc.internal.getNumberOfPages();
-    for (let i = 1; i <= totalPages; i++) {
-        doc.setPage(i);
-        doc.setFontSize(8);
-        doc.text(`Página ${i} de ${totalPages}`, pageWidth - 12, 30, { align: 'right' });
-    }
-
-    const finalY = (doc as any).lastAutoTable.finalY + 10;
-    
-    const drawFooter = (y: number) => {
-        const boxW = (pageWidth - 20) / 3;
-        doc.setDrawColor(0);
-        doc.rect(10, y, boxW, 15);
-        doc.setFontSize(8);
-        doc.text('ELABORO:', 12, y + 4);
-        doc.text('ENCARGADO ENFERMERIA', 12, y + 12);
-        
-        doc.rect(10 + boxW, y, boxW, 15);
-        doc.text('REVISO: JHON SALAZAR', 12 + boxW, y + 4);
-        doc.text('CARGO: DIRECTOR OPERATIVO', 12 + boxW, y + 12);
-        
-        doc.rect(10 + (boxW * 2), y, boxW, 15);
-        doc.text('APROBO:', 12 + (boxW * 2), y + 4);
-        doc.text('CARGO:', 12 + (boxW * 2), y + 12);
-    };
-
-    if (finalY + 20 > pageHeight - 10) {
-        doc.addPage();
-        drawFooter(35);
-    } else {
-        drawFooter(finalY);
-    }
 
     doc.save(`KARDEX-${paciente.replace(/\s+/g, '_')}-${inicioStr}.pdf`);
   }
